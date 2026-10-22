@@ -3,6 +3,8 @@
 > **Last reviewed:** 2026-10-10 · **Last updated:** 2026-10-13 · **Change:** minor (Vietnamese 100% of current key union; native-speaker community review; twelve-language mean ≈68%) · **Target:** Adobe Acrobat Pro (Acrobat DC, continuous track 26.002.21931, macOS)
 > **Last reviewed:** 2026-10-10 · **Last updated:** 2026-10-14 · **Change:** minor (Italian count after completing its catalog) · **Target:** Adobe Acrobat Pro (Acrobat DC, continuous track 26.002.21931, macOS)
 
+> **Narrowed on 2026-10-22.** 2026-10-22: KreativPdf ships four interface languages, English, French, Spanish and Turkish. The other 19 catalogs were removed (`ar`, `bg`, `cs`, `de`, `el`, `hu`, `it`, `ja`, `kk`, `lt`, `pl`, `pt-br`, `ru`, `sl`, `te`, `uk`, `vi`, `zh-hans`, `zh-hant`) and the date languages followed. Script support (CJK, Arabic, Telugu and Thai fonts, right-to-left text) stays for document content and file names. The tables below describe the 23-language set as it was and are kept as history; only the English, French, Spanish and Turkish rows still apply.
+
 Per-language status of KreativPdf's interface against Acrobat Pro's. How translations work and how to
 add a language: [localization.md](localization.md). Summary in [ROADMAP.md](../ROADMAP.md).
 
@@ -82,6 +84,7 @@ Acrobat languages KreativPdf lacks: Danish, Dutch, Finnish, Norwegian, Swedish, 
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-10-22 | major | Narrowed to English, French, Spanish and Turkish (19 catalogs removed); the tables are history |
 | 2026-10-13 | minor | Vietnamese (`vi`) catalog: 2,591 entries (100% of current key union + `theme`/`Appearance`); twelve-language mean ≈ 68%; native-speaker community review; registered with `plural_none` |
 | 2026-10-14 | minor | Italian: 2,528 entries after adding the 201 keys the other catalogs had and the code looks up |
 | 2026-10-12 | minor | Added current counts for Kazakh, Polish, Slovenian, Greek, Turkish and Lithuanian; retained existing language assessments and the original percentage snapshot |

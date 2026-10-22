@@ -1,4 +1,4 @@
-# Spanish (es) catalog. Format: see the header of ja.tsv
+# Spanish (es) catalog. Format: see docs/localization.md
 # (context <TAB> source <TAB> translation; @id, @plural and other contexts; escapes \n \t \\).
 # Plural forms (see `plural_one_other` in i18n/mod.rs): one (1) | other.
 #

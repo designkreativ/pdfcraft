@@ -1,4 +1,4 @@
-# French (fr) catalog. Format: see the header of ja.tsv
+# French (fr) catalog. Format: see docs/localization.md
 # (context <TAB> source <TAB> translation; @id, @plural and other contexts; escapes \n \t \\).
 # Plural forms (see `plural_fr` in i18n/mod.rs): one (0 and 1) | other.
 #

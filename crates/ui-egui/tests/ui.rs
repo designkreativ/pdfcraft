@@ -1184,26 +1184,27 @@ fn cancelling_then_discarding_an_earlier_dirty_tab_preserves_the_selected_docume
 }
 
 #[test]
-fn long_german_tool_labels_stay_within_the_sidebar() {
+fn long_french_tool_labels_stay_within_the_sidebar() {
+    use pdfcraft_ui_egui::i18n::{Lang, tr};
     use pdfcraft_ui_egui::{LeftPanel, Mode};
+    let fr = Lang::from_code("fr").unwrap();
     let mut h = harness(|app| app.open_bytes("fixture.pdf", None, FIXTURE.to_vec()).expect("fixture opens"));
-    h.state_mut().set_option("language", "de").unwrap();
+    h.state_mut().set_option("language", "fr").unwrap();
     h.state_mut().mode = Mode::AllTools;
     h.state_mut().left_open = true;
     // The tool heading has to leave room for Back and Close even when translated.
     h.state_mut().left = LeftPanel::Tool("fill_sign");
     h.run_steps(4);
-    let heading =
-        painted_text(&h).into_iter().find(|(s, ..)| s.starts_with("Ausfüllen und")).expect("translated heading is painted, whole or elided");
+    let start: String = tr(fr, "Fill & Sign").chars().take(8).collect();
+    let heading = painted_text(&h).into_iter().find(|(s, ..)| s.starts_with(&start)).expect("translated heading is painted, whole or elided");
     assert!(heading.2.right() <= 272.0, "translated heading runs past the sidebar: {:?}", heading.2);
     // A long sub-tool name must stop before its status chip, not paint over the PDF.
     h.state_mut().left = LeftPanel::Tool("protect");
     h.run_steps(4);
-    let item =
-        painted_text(&h).into_iter().find(|(s, ..)| s == "Ausgeblendete Informationen entfernen").expect("long translated sub-tool is painted");
+    let long = tr(fr, "Remove hidden information");
+    let item = painted_text(&h).into_iter().find(|(s, ..)| s == long).expect("long translated sub-tool is painted");
     assert!(item.2.right() <= 272.0, "translated tool item runs past the sidebar: {:?}", item.2);
 }
-
 #[test]
 fn document_tabs_expose_selection_and_activate_from_keyboard() {
     use egui::accesskit::Role;

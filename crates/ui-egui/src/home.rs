@@ -200,7 +200,7 @@ mod tests {
 
     #[test]
     fn translated_card_description_leaves_room_for_the_action() {
-        let de = crate::i18n::Lang::from_code("de").unwrap();
+        let de = crate::i18n::Lang::from_code("fr").unwrap();
         crate::i18n::set_current(de);
         let ctx = egui::Context::default();
         ctx.set_fonts(theme::font_definitions());

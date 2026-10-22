@@ -464,11 +464,11 @@ mod tests {
             assert_eq!((style.animation_time, style.scroll_animation), times, "{effects:?}");
         }
         // The row's labels are translated: the heading, and On and Off as they suit it.
-        let de = crate::i18n::Lang::from_code("de").expect("German ships");
-        assert_eq!(crate::i18n::tr(de, "Animation effects"), "Animationseffekte");
+        let fr = crate::i18n::Lang::from_code("fr").expect("French ships");
+        assert_eq!(crate::i18n::tr(fr, "Animation effects"), "Effets d'animation");
         let labels: Vec<&str> =
-            AnimationEffects::ALL.into_iter().map(|choice| crate::i18n::tr_ctx(de, "animation effects", choice.label())).collect();
-        assert_eq!(labels, ["Systemeinstellung verwenden", "Ein", "Aus"]);
+            AnimationEffects::ALL.into_iter().map(|choice| crate::i18n::tr_ctx(fr, "animation effects", choice.label())).collect();
+        assert_eq!(labels, ["Utiliser le réglage du système", "Activés", "Désactivés"]);
         for lang in crate::i18n::Lang::all() {
             for english in ["Animation effects", "On", "Off"] {
                 let shown = if english == "Animation effects" {

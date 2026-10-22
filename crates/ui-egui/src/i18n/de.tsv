@@ -2370,6 +2370,8 @@ animation effects	Off	Aus
 	Maximize	Maximieren
 	Restore	Wiederherstellen
 	Use system title bar	System-Titelleiste verwenden
+	Liquid Glass	Liquid Glass
+	Translucent floating bars with a glass-like sheen and rim.	Durchscheinende schwebende Leisten mit glasartigem Schimmer und Rand.
 	Show a basic title bar for the window buttons instead of the tab strip. GNOME doesn't draw title bars for apps, so this one doesn't follow its theme.	Eine einfache Titelleiste für die Fensterknöpfe statt der Tableiste anzeigen. GNOME zeichnet für Apps keine Titelleisten, daher folgt diese nicht seinem Design.
 
 # Absolute local GoToR confirmation (#1364).

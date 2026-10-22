@@ -2613,6 +2613,8 @@ key	Space	Tarpas
 	Maximize	Išdidinti
 	Restore	Atkurti
 	Use system title bar	Naudoti sistemos pavadinimo juostą
+	Liquid Glass	Liquid Glass
+	Translucent floating bars with a glass-like sheen and rim.	Permatomos slankiosios juostos su stiklo blizgesiu ir kraštu.
 	Show a basic title bar for the window buttons instead of the tab strip. GNOME doesn't draw title bars for apps, so this one doesn't follow its theme.	Rodyti paprastą pavadinimo juostą su lango mygtukais vietoj kortelių juostos. GNOME nepiešia programoms pavadinimo juostų, todėl ši neatitinka jo temos.
 
 # Absolute local GoToR confirmation (#1364).

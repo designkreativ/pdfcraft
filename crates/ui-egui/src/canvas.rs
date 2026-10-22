@@ -4664,7 +4664,7 @@ fn quick_bar(app: &mut PdfCraftApp, area: Rect, ui: &mut egui::Ui) {
     // Unconstrained, or the window's edge would stop it sliding away.
     let shown = egui::Area::new(id).order(egui::Order::Middle).fixed_pos(pos).constrain(false).show(ui.ctx(), |ui| {
         ui.multiply_opacity(idle.opacity);
-        crate::widgets::floating_frame(&t).show(ui, |ui| {
+        crate::widgets::floating_card(ui, &t, |ui| {
             ui.spacing_mut().item_spacing.y = 2.0;
             ui.vertical(|ui| {
                 for (mode, icon, label) in MODES {

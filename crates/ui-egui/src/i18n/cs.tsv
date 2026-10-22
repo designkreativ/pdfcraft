@@ -2443,6 +2443,8 @@ animation effects	Off	Vypnuto
 	Maximize	Maximalizovat
 	Restore	Obnovit
 	Use system title bar	Použít systémové záhlaví okna
+	Liquid Glass	Liquid Glass
+	Translucent floating bars with a glass-like sheen and rim.	Průhledné plovoucí panely s leskem a okrajem jako ze skla.
 	Show a basic title bar for the window buttons instead of the tab strip. GNOME doesn't draw title bars for apps, so this one doesn't follow its theme.	Zobrazit jednoduché záhlaví s tlačítky okna místo pruhu karet. GNOME aplikacím záhlaví nekreslí, proto toto záhlaví nesleduje jeho motiv.
 
 # Absolute local GoToR confirmation (#1364).

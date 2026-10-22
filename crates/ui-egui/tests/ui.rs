@@ -1320,6 +1320,29 @@ fn dragging_a_tab_moves_it_and_keeps_the_same_document_active() {
     }
 }
 
+/// Liquid Glass is off until it is turned on; the setting reaches what is drawn, survives a
+/// restart, and refuses a value that is not true or false.
+#[test]
+fn liquid_glass_is_off_by_default_and_reaches_the_theme() {
+    use pdfcraft_ui_egui::theme::Tokens;
+    let mut h = three_tab_harness();
+    assert!(!Tokens::get(&h.ctx).glass);
+    h.state_mut().set_option("liquid-glass", "true").unwrap();
+    h.run_steps(3);
+    assert!(Tokens::get(&h.ctx).glass);
+    let saved = h.state().persist();
+    let value: serde_json::Value = serde_json::from_str(&saved).unwrap();
+    assert_eq!(value["liquid_glass"], true);
+    let mut later = PdfCraftApp::new();
+    later.restore(&saved);
+    assert!(later.liquid_glass);
+    assert!(h.state_mut().set_option("liquid-glass", "maybe").is_err());
+    assert!(h.state().liquid_glass, "a refused value changes nothing");
+    h.state_mut().set_option("liquid-glass", "false").unwrap();
+    h.run_steps(3);
+    assert!(!Tokens::get(&h.ctx).glass);
+}
+
 /// Dragged well below the strip, a tab tears off: the pointer carries its name and what letting
 /// go does, and letting go opens it in a window of its own. The main window keeps the others.
 #[test]

@@ -130,14 +130,71 @@ pub fn idle_rect(ctx: &egui::Context, id: egui::Id) -> Option<Rect> {
     ctx.data(|d| d.get_temp::<Rect>(key))
 }
 
-/// The card a floating bar sits on: the left tool bar and the right bar.
+/// A glass card's corner, in points: rounder than a plain card's.
+const GLASS_RADIUS: u8 = 18;
+
+/// The card a floating bar sits on: the left tool bar and the right bar. With Liquid Glass on it
+/// is translucent, with a soft rim and a deep shadow ([`floating_card`] adds the sheen).
 pub fn floating_frame(t: &Tokens) -> egui::Frame {
+    if t.glass {
+        let rim = if t.dark() { Color32::from_white_alpha(40) } else { Color32::from_black_alpha(26) };
+        return egui::Frame::NONE
+            .fill(t.card.gamma_multiply(if t.dark() { 0.62 } else { 0.68 }))
+            .stroke(Stroke::new(1.0, rim))
+            .corner_radius(CornerRadius::same(GLASS_RADIUS))
+            .shadow(egui::Shadow { offset: [0, 8], blur: 28, spread: 0, color: Color32::from_black_alpha(if t.dark() { 130 } else { 40 }) })
+            .inner_margin(egui::Margin::same(7));
+    }
     egui::Frame::NONE
         .fill(t.card)
         .stroke(Stroke::new(1.0, t.border))
         .corner_radius(CornerRadius::same(12))
         .shadow(egui::Shadow { offset: [0, 4], blur: 16, spread: 0, color: Color32::from_black_alpha(if t.dark() { 100 } else { 28 }) })
         .inner_margin(egui::Margin::same(6))
+}
+
+/// [`floating_frame`] with its contents. With Liquid Glass on, a light sheen falls from the top
+/// edge, between the card's fill and its contents, and a bright line runs along the top.
+pub fn floating_card<R>(ui: &mut egui::Ui, t: &Tokens, add_contents: impl FnOnce(&mut egui::Ui) -> R) -> egui::InnerResponse<R> {
+    if !t.glass {
+        return floating_frame(t).show(ui, add_contents);
+    }
+    let mut prepared = floating_frame(t).begin(ui);
+    let sheen = ui.painter().add(egui::Shape::Noop);
+    let inner = add_contents(&mut prepared.content_ui);
+    let response = prepared.end(ui);
+    ui.painter().set(sheen, glass_sheen(response.rect, f32::from(GLASS_RADIUS), t.dark()));
+    egui::InnerResponse::new(inner, response)
+}
+
+/// The sheen of a glass card in `rect`: a white gradient from the top edge to a little past the
+/// middle, and a bright line along the top. The gradient's corners are cut along the chord of the
+/// card's corner arcs, which keeps it inside the rounded outline.
+fn glass_sheen(rect: Rect, radius: f32, dark: bool) -> egui::Shape {
+    let r = radius.min(rect.width() / 2.0).min(rect.height() / 2.0).max(0.0);
+    let (left, right, top) = (rect.left() + 1.0, rect.right() - 1.0, rect.top() + 1.0);
+    let bottom = top + (rect.height() * 0.55).max(r);
+    let strong = Color32::from_white_alpha(if dark { 30 } else { 120 });
+    let none = Color32::from_white_alpha(0);
+    let mut mesh = egui::Mesh::default();
+    for (x, y, color) in [
+        (left, top + r, strong),
+        (left + r, top, strong),
+        (right - r, top, strong),
+        (right, top + r, strong),
+        (right, bottom, none),
+        (left, bottom, none),
+    ] {
+        mesh.colored_vertex(egui::pos2(x, y), color);
+    }
+    for i in 1..5u32 {
+        mesh.add_triangle(0, i, i + 1);
+    }
+    let line = [egui::pos2(left + r, top + 0.5), egui::pos2(right - r, top + 0.5)];
+    egui::Shape::Vec(vec![
+        egui::Shape::mesh(mesh),
+        egui::Shape::line_segment(line, Stroke::new(1.0, Color32::from_white_alpha(if dark { 70 } else { 200 }))),
+    ])
 }
 
 fn dialog_frame(ctx: &egui::Context) -> egui::Frame {
@@ -886,6 +943,37 @@ pub fn icon_pill(ui: &mut egui::Ui, icon: &str, label: &str, primary: bool) -> R
 mod tests {
     use super::*;
     use egui::Pos2;
+
+    fn glass(kind: theme::ThemeKind) -> Tokens {
+        Tokens { glass: true, ..Tokens::for_kind(kind) }
+    }
+
+    /// Glass cards are translucent in both themes; plain ones stay opaque.
+    #[test]
+    fn a_glass_card_is_translucent_and_a_plain_one_is_not() {
+        for kind in [theme::ThemeKind::Light, theme::ThemeKind::Dark] {
+            let plain = Tokens::for_kind(kind);
+            assert_eq!(floating_frame(&plain).fill.a(), 255, "{kind:?}");
+            let fill = floating_frame(&glass(kind)).fill;
+            assert!(fill.a() > 90 && fill.a() < 255, "{kind:?}: {fill:?}");
+        }
+    }
+
+    /// The sheen stays inside the card, whatever its size (a card as small as its corners, or
+    /// smaller, and one with no size at all).
+    #[test]
+    fn the_sheen_stays_inside_the_card() {
+        for size in [egui::vec2(60.0, 400.0), egui::vec2(20.0, 20.0), egui::vec2(1.0, 1.0), egui::Vec2::ZERO] {
+            let rect = Rect::from_min_size(egui::pos2(30.0, 40.0), size);
+            let egui::Shape::Vec(shapes) = glass_sheen(rect, f32::from(GLASS_RADIUS), true) else { panic!("a glass sheen is a list of shapes") };
+            let egui::Shape::Mesh(mesh) = &shapes[0] else { panic!("the sheen's first shape is its gradient") };
+            let outer = rect.expand(1.0);
+            for v in &mesh.vertices {
+                assert!(outer.contains(v.pos) && v.pos.is_finite(), "{size:?}: {:?}", v.pos);
+            }
+            assert!(mesh.indices.iter().all(|&i| (i as usize) < mesh.vertices.len()));
+        }
+    }
 
     /// Runs one frame at `time` seconds with the pointer at `pointer`, and returns the opacity the
     /// bar `id` gets in it.

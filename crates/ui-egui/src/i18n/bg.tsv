@@ -2332,6 +2332,8 @@ animation effects	Off	Изключени
 	Maximize	Максимизиране
 	Restore	Възстановяване
 	Use system title bar	Използване на системната заглавна лента
+	Liquid Glass	Liquid Glass
+	Translucent floating bars with a glass-like sheen and rim.	Прозрачни плаващи ленти с блясък и кант като от стъкло.
 	Show a basic title bar for the window buttons instead of the tab strip. GNOME doesn't draw title bars for apps, so this one doesn't follow its theme.	Показване на обикновена заглавна лента за бутоните на прозореца вместо лентата с раздели. GNOME не рисува заглавни ленти за приложенията, затова тази не следва темата му.
 
 # Absolute local GoToR confirmation (#1364).

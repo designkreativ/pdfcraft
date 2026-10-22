@@ -603,6 +603,8 @@ pub struct PdfCraftApp {
     /// Preferences ▸ Use system title bar: where `window_controls` is set, give the window back
     /// winit's frame instead of drawing the header bar (#1001).
     pub system_title_bar: bool,
+    /// Liquid Glass: translucent floating bars, menus and dialogs (Preferences ▸ Floating bars).
+    pub liquid_glass: bool,
     /// View ▸ Auto hide side panels: the floating bars at the document's sides slide out of the
     /// window when idle, and come back when the pointer comes near them.
     pub auto_hide_bars: bool,
@@ -981,6 +983,7 @@ impl PdfCraftApp {
             integrated_titlebar: false,
             window_controls: None,
             system_title_bar: false,
+            liquid_glass: false,
             auto_hide_bars: true,
             chrome_fades: true,
             chrome_fade_after: 5,
@@ -2342,6 +2345,7 @@ impl PdfCraftApp {
         });
         // Set apart: one more key inside the macro above passes serde_json's recursion limit.
         v["redact_prefs"] = self.redact_defaults.to_json();
+        v["liquid_glass"] = serde_json::Value::Bool(self.liquid_glass);
         v["auto_hide_bars"] = serde_json::Value::Bool(self.auto_hide_bars);
         v["chrome_fade_after"] = serde_json::Value::from(self.chrome_fade_after);
         v["chrome_fades"] = serde_json::Value::Bool(self.chrome_fades);
@@ -2394,6 +2398,9 @@ impl PdfCraftApp {
         }
         if let Some(on) = v["system_title_bar"].as_bool() {
             self.system_title_bar = on;
+        }
+        if let Some(on) = v["liquid_glass"].as_bool() {
+            self.liquid_glass = on;
         }
         if let Some(on) = v["reload_changed_files"].as_bool() {
             self.reload_changed_files = on;
@@ -2817,6 +2824,13 @@ impl PdfCraftApp {
                     _ => return Err("auto-hide-bars must be true or false".into()),
                 };
             }
+            ("liquid-glass", _) => {
+                self.liquid_glass = match value {
+                    "true" => true,
+                    "false" => false,
+                    _ => return Err("liquid-glass must be true or false".into()),
+                };
+            }
             ("system-title-bar", _) => {
                 self.system_title_bar = match value {
                     "true" => true,
@@ -3068,6 +3082,7 @@ impl eframe::App for PdfCraftApp {
             }
         }
         self.sync_theme(ctx);
+        theme::set_glass(ctx, self.liquid_glass);
         let native = ctx.native_pixels_per_point().unwrap_or(1.0);
         ui_scale::sync(ctx, ui_scale::zoom(self.ui_scale, self.system_text_scale, native), &mut self.ui_scale_applied);
         // Remember user work even if its tab is subsequently closed or Home is selected.

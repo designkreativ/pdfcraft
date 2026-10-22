@@ -434,6 +434,7 @@ fn general(ui: &mut egui::Ui, app: &mut PdfCraftApp, t: &Tokens) {
         }
     });
     card(ui, t, "panels-top-left", tl!("Floating bars"), Some(tl!("The bars beside the page and the tab strip above it.")), |ui| {
+        switch_row(ui, t, &mut app.liquid_glass, tl!("Liquid Glass"), Some(tl!("Translucent floating bars with a glass-like sheen and rim.")));
         named_row(ui, t, tl!("Fade side panels"), None, true, |ui| {
             ui.add_enabled_ui(app.chrome_fades, |ui| seconds(ui, "chrome-fade-after", &mut app.chrome_fade_after, &widgets::FADE_CHOICES));
             ui.add_space(8.0);

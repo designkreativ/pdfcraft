@@ -2282,6 +2282,8 @@ animation effects	Off	Выкл
 	Maximize	Развернуть
 	Restore	Восстановить
 	Use system title bar	Использовать системный заголовок окна
+	Liquid Glass	Liquid Glass
+	Translucent floating bars with a glass-like sheen and rim.	Полупрозрачные плавающие панели с глянцем и кромкой как у стекла.
 	Show a basic title bar for the window buttons instead of the tab strip. GNOME doesn't draw title bars for apps, so this one doesn't follow its theme.	Показывать простой заголовок окна с кнопками вместо полосы вкладок. GNOME не рисует заголовки для приложений, поэтому этот заголовок не следует его теме.
 
 # Absolute local GoToR confirmation (#1364).

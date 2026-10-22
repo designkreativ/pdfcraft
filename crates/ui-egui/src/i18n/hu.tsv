@@ -2368,6 +2368,8 @@ animation effects	Off	Ki
 	Maximize	Maximalizálás
 	Restore	Visszaállítás
 	Use system title bar	Rendszer címsorának használata
+	Liquid Glass	Liquid Glass
+	Translucent floating bars with a glass-like sheen and rim.	Áttetsző lebegő sávok üvegszerű csillogással és szegéllyel.
 	Show a basic title bar for the window buttons instead of the tab strip. GNOME doesn't draw title bars for apps, so this one doesn't follow its theme.	Egyszerű címsor megjelenítése az ablakgombokkal a lapsáv helyett. A GNOME nem rajzol címsort az alkalmazásoknak, ezért ez nem követi a témáját.
 
 # Absolute local GoToR confirmation (#1364).

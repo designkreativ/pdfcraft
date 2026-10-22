@@ -2509,6 +2509,8 @@ animation effects	Off	Desactivados
 	Maximize	Maximizar
 	Restore	Restaurar
 	Use system title bar	Usar la barra de título del sistema
+	Liquid Glass	Liquid Glass
+	Translucent floating bars with a glass-like sheen and rim.	Barras flotantes translúcidas con un brillo y un borde de cristal.
 	Show a basic title bar for the window buttons instead of the tab strip. GNOME doesn't draw title bars for apps, so this one doesn't follow its theme.	Mostrar una barra de título básica para los botones de la ventana en lugar de la barra de pestañas. GNOME no dibuja barras de título para las aplicaciones, así que esta no sigue su tema.
 
 # Absolute local GoToR confirmation (#1364).

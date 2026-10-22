@@ -2369,6 +2369,8 @@ animation effects	Off	オフ
 	Maximize	最大化
 	Restore	元のサイズに戻す
 	Use system title bar	システムのタイトルバーを使う
+	Liquid Glass	Liquid Glass
+	Translucent floating bars with a glass-like sheen and rim.	ガラスのような光沢と縁を持つ、半透明のフローティングバー。
 	Show a basic title bar for the window buttons instead of the tab strip. GNOME doesn't draw title bars for apps, so this one doesn't follow its theme.	タブバーの代わりに、ウィンドウボタン用のシンプルなタイトルバーを表示します。GNOME はアプリのタイトルバーを描画しないため、このタイトルバーは GNOME のテーマに従いません。
 
 # Absolute local GoToR confirmation (#1364).

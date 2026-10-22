@@ -68,6 +68,8 @@ pub struct Tokens {
     pub success_soft: Color32,
     pub page_shadow: Color32,
     pub radius: u8,
+    /// Liquid Glass: floating bars, menus and dialogs are translucent, with a sheen and a rim.
+    pub glass: bool,
 }
 
 impl Tokens {
@@ -98,6 +100,7 @@ impl Tokens {
                 success_soft: Color32::from_rgb(0xDD, 0xF3, 0xE4),
                 page_shadow: Color32::from_black_alpha(34),
                 radius: 6,
+                glass: false,
             },
             ThemeKind::Dark => Self {
                 kind,
@@ -124,6 +127,7 @@ impl Tokens {
                 success_soft: Color32::from_rgb(0x1A, 0x36, 0x27),
                 page_shadow: Color32::from_black_alpha(120),
                 radius: 6,
+                glass: false,
             },
         }
     }
@@ -425,6 +429,16 @@ pub fn medium(size: f32) -> FontId {
 }
 pub fn semibold(size: f32) -> FontId {
     FontId::new(size, FontFamily::Name("semibold".into()))
+}
+
+/// Turn Liquid Glass on or off for what is drawn from now on. [`apply`] resets it, so call this
+/// after it each frame.
+pub fn set_glass(ctx: &egui::Context, on: bool) {
+    let mut t = Tokens::get(ctx);
+    if t.glass != on {
+        t.glass = on;
+        ctx.data_mut(|d| d.insert_temp(egui::Id::new("pdfcraft-theme"), t));
+    }
 }
 
 pub fn apply(ctx: &egui::Context, kind: ThemeKind) {

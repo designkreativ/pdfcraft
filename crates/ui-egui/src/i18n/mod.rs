@@ -1466,6 +1466,8 @@ mod tests {
             "ΔLOC",
             "+Bin",
             "−Bin",
+            // Apple's name for the translucent look, kept as the name in every language.
+            "Liquid Glass",
             // The distinguished name of a certificate, abbreviated as in X.500.
             "DN: ",
         ];
@@ -1580,6 +1582,8 @@ mod tests {
             "−Bin",
             "Model",
             "Home / End",
+            // Apple's name for the translucent look, kept as the name in every language.
+            "Liquid Glass",
             // The distinguished name of a certificate, abbreviated as in X.500.
             "DN: ",
         ];
@@ -2505,6 +2509,7 @@ mod tests {
         // Authoritative allowlist for intentional English-identical Vietnamese rows.
         const KEEP_AS_IS: &[&str] = &[
             "OK",
+            "Liquid Glass",
             "Digital ID",
             "ZIP",
             "JavaScript",
@@ -2986,6 +2991,8 @@ mod tests {
             "ΔLOC",
             "+Bin",
             "−Bin",
+            // Apple's name for the translucent look, kept as the name in every language.
+            "Liquid Glass",
             // The distinguished name of a certificate, abbreviated as in X.500.
             "DN: ",
         ];
@@ -3066,6 +3073,8 @@ mod tests {
             "ΔLOC",
             "+Bin",
             "−Bin",
+            // Apple's name for the translucent look, kept as the name in every language.
+            "Liquid Glass",
             // The distinguished name of a certificate, abbreviated as in X.500.
             "DN: ",
         ];

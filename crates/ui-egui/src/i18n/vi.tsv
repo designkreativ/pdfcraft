@@ -2606,6 +2606,8 @@ key	Space	Space
 	Maximize	Phóng to
 	Restore	Khôi phục
 	Use system title bar	Dùng thanh tiêu đề hệ thống
+	Liquid Glass	Liquid Glass
+	Translucent floating bars with a glass-like sheen and rim.	Thanh nổi trong mờ với ánh bóng và viền như kính.
 	Show a basic title bar for the window buttons instead of the tab strip. GNOME doesn't draw title bars for apps, so this one doesn't follow its theme.	Hiện thanh tiêu đề đơn giản cho các nút cửa sổ thay vì dải tab. GNOME không vẽ thanh tiêu đề cho ứng dụng, nên thanh này không theo chủ đề của nó.
 	Turn upside down (180°)	Lật ngược (180°)
 	4 x 6 in label (101.6 x 152.4 mm)	Nhãn 4 × 6 in (101,6 × 152,4 mm)

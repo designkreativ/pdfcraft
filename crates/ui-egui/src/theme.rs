@@ -377,6 +377,14 @@ fn font_definitions_for_platform(prefer_hans: bool, platform: FontPolicyPlatform
     add(&mut fonts, "Inter-SemiBold", include_bytes!("../../../assets/fonts/Inter-SemiBold.ttf"));
     add(&mut fonts, "JetBrainsMono", include_bytes!("../../../assets/fonts/JetBrainsMono-Regular.ttf"));
     fonts.families.entry(FontFamily::Proportional).or_default().insert(0, "Inter".to_owned());
+    // With the optional Apple build input, SF Pro Text leads the interface and Inter backs it up.
+    let sf = sf_pro_text();
+    if let Some((regular, _)) = sf {
+        for (name, bytes) in crate::apple_symbols::SF_PRO_TEXT {
+            fonts.font_data.insert((*name).to_owned(), Arc::new(FontData::from_static(bytes)));
+        }
+        fonts.families.entry(FontFamily::Proportional).or_default().insert(0, regular.to_owned());
+    }
     fonts.families.entry(FontFamily::Monospace).or_default().insert(0, "JetBrainsMono".to_owned());
     // Keep missing Latin/Cyrillic letters in the app's own faces (for example Bulgarian ѝ,
     // absent from JetBrains Mono), before egui's defaults or optional system/CJK fallbacks.
@@ -413,12 +421,21 @@ fn font_definitions_for_platform(prefer_hans: bool, platform: FontPolicyPlatform
         }
     }
     let fallback: Vec<String> = fonts.families[&FontFamily::Proportional].clone();
-    for (fam, primary) in [("medium", "Inter-Medium"), ("semibold", "Inter-SemiBold")] {
+    let (medium, semibold) = sf.map_or(("Inter-Medium", "Inter-SemiBold"), |(_, weights)| weights);
+    for (fam, primary) in [("medium", medium), ("semibold", semibold)] {
         let mut stack = vec![primary.to_owned()];
         stack.extend(fallback.iter().cloned());
         fonts.families.insert(FontFamily::Name(fam.into()), stack);
     }
     fonts
+}
+
+/// The names of SF Pro Text's Regular face, and its Medium and Semibold, when the build had it.
+fn sf_pro_text() -> Option<(&'static str, (&'static str, &'static str))> {
+    match crate::apple_symbols::SF_PRO_TEXT {
+        [(regular, _), (medium, _), (semibold, _)] => Some((regular, (medium, semibold))),
+        _ => None,
+    }
 }
 
 pub fn regular(size: f32) -> FontId {

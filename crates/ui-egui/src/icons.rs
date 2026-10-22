@@ -8,6 +8,7 @@ use craft_ui::icons::{SvgIconSet, SvgStyle};
 
 use egui::{Color32, Rect, Response, Stroke, Vec2};
 
+use crate::apple_symbols::APPLE_SYMBOLS;
 use crate::icon_data::ICONS;
 use crate::theme::{self, Tokens};
 
@@ -16,11 +17,26 @@ fn white_icons() -> &'static SvgIconSet {
     MAP.get_or_init(|| SvgIconSet::new(ICONS, SvgStyle { current_color: "#ffffff", stroke_width: Some("1.75") }, "bytes://icons/", "square"))
 }
 
+/// The icons drawn with an Apple symbol, when the build had the symbols folder. Filled shapes, so
+/// no stroke width to set; a URI prefix of its own keeps egui's image cache apart from Lucide's.
+fn apple_icons() -> &'static SvgIconSet {
+    static MAP: OnceLock<SvgIconSet> = OnceLock::new();
+    MAP.get_or_init(|| SvgIconSet::new(APPLE_SYMBOLS, SvgStyle { current_color: "#ffffff", stroke_width: None }, "bytes://icons-sf/", "square"))
+}
+
 pub fn exists(name: &str) -> bool {
     white_icons().contains(name)
 }
 
 fn source(name: &str) -> egui::ImageSource<'static> {
+    if let Some(symbol) = apple_icons().canonical_name(name) {
+        return apple_icons().source(symbol);
+    }
+    lucide_source(name)
+}
+
+/// The Lucide drawing of `name`.
+fn lucide_source(name: &str) -> egui::ImageSource<'static> {
     // KreativPdf caches an unknown name under the resolved fallback name.
     white_icons().source(white_icons().canonical_name(name).unwrap_or("square"))
 }
@@ -104,15 +120,29 @@ mod tests {
         for (name, original) in ICONS {
             let expected =
                 String::from_utf8_lossy(original).replace("currentColor", "#ffffff").replace("stroke-width=\"2\"", "stroke-width=\"1.75\"");
-            let egui::ImageSource::Bytes { uri, bytes } = source(name) else { panic!("expected SVG bytes") };
+            let egui::ImageSource::Bytes { uri, bytes } = lucide_source(name) else { panic!("expected SVG bytes") };
             assert_eq!(uri.as_ref(), format!("bytes://icons/{name}.svg"));
             assert_eq!(bytes.as_ref(), expected.as_bytes(), "{name}");
         }
-        let egui::ImageSource::Bytes { uri, bytes } = source("missing-icon") else { panic!("expected SVG bytes") };
-        let egui::ImageSource::Bytes { bytes: fallback, .. } = source("square") else { panic!("expected SVG bytes") };
+        let egui::ImageSource::Bytes { uri, bytes } = lucide_source("missing-icon") else { panic!("expected SVG bytes") };
+        let egui::ImageSource::Bytes { bytes: fallback, .. } = lucide_source("square") else { panic!("expected SVG bytes") };
         assert_eq!(uri.as_ref(), "bytes://icons/square.svg");
         assert_eq!(bytes.as_ref(), fallback.as_ref());
         assert!(!exists("missing-icon"));
+    }
+
+    /// Every icon the Apple input draws is one of KreativPdf's own, drawn tintable (no black left),
+    /// and keeps to its own cache keys. Without the input there is nothing to check.
+    #[test]
+    fn apple_symbols_replace_only_known_icons_and_tint() {
+        for (name, svg) in APPLE_SYMBOLS {
+            assert!(ICONS.iter().any(|(icon, _)| icon == name), "{name} is not an icon");
+            let egui::ImageSource::Bytes { uri, bytes } = source(name) else { panic!("expected SVG bytes") };
+            assert_eq!(uri.as_ref(), format!("bytes://icons-sf/{name}.svg"));
+            let text = String::from_utf8_lossy(bytes.as_ref());
+            assert!(!text.contains("black") && text.contains("#ffffff"), "{name} must be tintable: {text:.200}");
+            assert!(svg.len() > 100, "{name}");
+        }
     }
 
     #[test]

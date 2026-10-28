@@ -72,6 +72,14 @@ Anything else is forbidden, including assets whose licence you cannot prove from
 - craft-fonts is an **optional build input**, never a Cargo dependency: `CRAFT_FONTS_DIR=<checkout> cargo build` makes `crates/fonts/build.rs` embed its fonts as `pdfcraft_fonts::CRAFT_FONTS`. Without it KreativPdf builds, tests and runs, but has no Japanese face (Japanese UI text shows replacement boxes, and writing Japanese into a PDF returns a clear error). Release builds always set it (`.github/workflows/release.yml`), and `ATTRIBUTION.toml` lists it as a `[[build_input]]`.
 - The desktop app may read one font **already installed on the user's machine** at runtime, as the last interface fallback for characters no embedded face has (`crates/ui-egui/src/system_fonts.rs`). That font is never embedded, shipped, committed or copied, and never appears in published screenshots (`PDFCRAFT_SYSTEM_FONTS=0`, which `cargo xtask screenshots` sets). It is not a way around §1.2: nothing from it may enter a PDF, a package or the repository.
 
+### 1.6 Apple input: a local build input, never committed
+
+The owner's builds of KreativPdf use Apple's SF Pro Text font and SF Symbols icons. They are **not open licences and are never committed, copied into the repository's tracked files, or listed as shipped assets**. They are an optional build input, like craft-fonts (§1.4):
+
+- `APPLE_ASSETS_DIR=<dir>` (default `apple-fonts/` at the repository root, git-ignored) holds `symbols/*.svg` (SF Symbols exports) and `SF-Pro-Text-{Regular,Medium,Semibold}.otf` (directly, or in `San-Francisco-Pro-Fonts-master/`). `crates/ui-egui/build.rs` embeds them; `crates/ui-egui/apple-symbols.txt` (names only) says which symbol draws which icon.
+- Without the folder everything builds, tests and runs with Lucide icons and Inter. Code must work when `apple_symbols::APPLE_SYMBOLS` and `SF_PRO_TEXT` are empty.
+- A binary built with the input contains Apple's files. Apple's licences allow them in software for Apple's platforms only, so such a binary is for the owner's own use, and CI release builds do not have the input. Do not publish it.
+
 ### 1.5 Procedure for adding or changing an asset
 
 Fonts go to craft-fonts instead (§1.4).

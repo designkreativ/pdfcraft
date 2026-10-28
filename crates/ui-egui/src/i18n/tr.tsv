@@ -1,4 +1,4 @@
-# Turkish (tr) catalog. Format: see the header of ja.tsv
+# Turkish (tr) catalog. Format: see docs/localization.md
 # (context <TAB> source <TAB> translation; @id, @plural and other contexts; escapes \n \t \\).
 # Plural forms (see `plural_none` in i18n/mod.rs): one form.
 #
@@ -2365,6 +2365,8 @@ animation effects	Off	Kapalı
 	Maximize	Büyüt
 	Restore	Geri yükle
 	Use system title bar	Sistem başlık çubuğunu kullan
+	Liquid Glass	Liquid Glass
+	Translucent floating bars with a glass-like sheen and rim.	Cam gibi parlaklığı ve kenarlığı olan yarı saydam yüzen çubuklar.
 	Show a basic title bar for the window buttons instead of the tab strip. GNOME doesn't draw title bars for apps, so this one doesn't follow its theme.	Sekme çubuğu yerine pencere düğmeleri için basit bir başlık çubuğu göster. GNOME uygulamalar için başlık çubuğu çizmez, bu yüzden bu çubuk onun temasına uymaz.
 
 # Absolute local GoToR confirmation (#1364).

@@ -1,5 +1,7 @@
 # Interface language
 
+> **2026-10-22:** only English, French, Spanish and Turkish ship. Passages below that name other languages (Portuguese and Chinese locale mapping, Japanese, Arabic and the rest) describe the earlier 23-language set; the script support they mention (CJK, Arabic, right-to-left text) stays for document content.
+
 Choose **Menu > Edit > Preferences…** (Command-comma on macOS, Ctrl-comma elsewhere) **> Interface language** and select **Auto**, **English**, **日本語**, **简体中文**, **繁體中文**, **Čeština**, **Português (Brasil)**, **Deutsch**, **Español**, **Français**, **Русский**, **Қазақша**, **Български**, **తెలుగు**, **Magyar**, **Українська**, **Italiano**, **العربية**, **Polski**, **Slovenščina**, **Ελληνικά**, **Türkçe**, **Lietuvių** or **Tiếng Việt**. The change applies immediately and persists between launches. Command ids, document contents and file names are unchanged.
 
 Displayed keyboard shortcuts use the same active interface language. For example, German shows `Strg+K` and `Strg+Umschalt+S` in the toolbar, menus, command palette, tooltips and Keyboard shortcuts dialog; macOS keeps its modifier symbols (`⌘`, `⇧`, `⌃`). Key names have their own `key` catalog context, so the Delete key can read `Entf` while the command remains `Löschen`. A missing key-name entry falls back to the English key name. Actual bindings and machine-facing command ids remain stable.
@@ -59,10 +61,27 @@ German labels keep nouns capitalized, including tool names inserted into notices
 
 ## How translations work
 
+Shipped languages: English (the source), French, Spanish and Turkish.
+
+Catalog format (columns separated by a TAB: `context`, `source`, `translation`):
+
+```text
+context  (empty)       a plain UI string; `source` is the English text in the code
+         @id           a command id (e.g. file.saveAs): wins over the English text for that menu
+                       item, so one id can read differently from its twin
+         @plural       `source` is "one|other" (English forms); the translation lists the
+                       language's forms separated by "|" (see `plural` in i18n/mod.rs)
+         anything else a disambiguating context passed to `tr_ctx`
+escapes  \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns.
+Lines starting with # and blank lines are ignored.
+```
+
+Product and technology names (KreativPdf, PDF ...) stay in Latin letters; the trailing "…" of dialog commands is kept.
+
 KreativPdf uses the same system as PhotoCraft (`crates/ui-egui/src/i18n/`):
 
 - Strings in the code stay in English and serve as lookup keys. At draw time, `tl!("Save")` returns the text in the current language, and falls back to English when there is no entry.
-- Each language has a catalog, `crates/ui-egui/src/i18n/<code>.tsv`, with one entry per line: `context<TAB>English<TAB>translation`. An empty context marks a plain string. `@id` keys an entry by command id (for example `file.saveAs`), so one menu item can read differently from another with the same English label. `@plural` holds plural forms. Any other context disambiguates an English word with several meanings (`tl_ctx!` in UI code, for example the signature pad's "Type" button against the "Type" column). The header of `ja.tsv` documents the format and escapes.
+- Each language has a catalog, `crates/ui-egui/src/i18n/<code>.tsv`, with one entry per line: `context<TAB>English<TAB>translation`. An empty context marks a plain string. `@id` keys an entry by command id (for example `file.saveAs`), so one menu item can read differently from another with the same English label. `@plural` holds plural forms. Any other context disambiguates an English word with several meanings (`tl_ctx!` in UI code, for example the signature pad's "Type" button against the "Type" column). The format and escapes are below.
 - Placeholders (`{name}`) must appear in both columns. A trailing `…` must be kept. `i18n::fmt` fills placeholders in one pass, so a value such as a file name containing `{n}` is inserted as written.
 - Catalogs are validated strictly: unknown escapes, unknown `@` contexts, placeholder or ellipsis mismatches, wrong plural form counts and duplicates are errors. The tests require the bundled catalogs to have none; at run time a bad line is skipped (and logged) and that string shows in English.
 - Catalogs are assets: each `.tsv` has an `ATTRIBUTION.toml` entry with `kind = "translation"` and its SHA-256, checked by `cargo xtask assets`. After editing a catalog, put the new hash into its entry by hand (`sha256sum crates/ui-egui/src/i18n/<code>.tsv`), because `cargo xtask assets --write` does not touch `ATTRIBUTION.toml`; the hash check is deliberate, so a changed asset gets its provenance re-checked. Without it `cargo xtask assets` and the test `assets::tests::the_real_manifest_passes` fail.

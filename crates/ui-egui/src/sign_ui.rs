@@ -1623,7 +1623,7 @@ mod tests {
         use crate::i18n::{Lang, tr};
         let english = AppearanceLabels::default();
         assert_eq!(appearance_labels(Lang::EN), (english.clone(), false));
-        for code in ["de", "es", "fr", "it", "pt-br", "pl", "tr", "sl", "hu"] {
+        for code in ["es", "fr", "tr"] {
             let lang = Lang::from_code(code).unwrap();
             let (labels, in_english) = appearance_labels(lang);
             assert!(!in_english, "{code}: {labels:?}");
@@ -1631,11 +1631,8 @@ mod tests {
                 assert_eq!(ours, tr(lang, source), "{code}: {field}");
             }
         }
-        let (de, _) = appearance_labels(Lang::from_code("de").unwrap());
-        assert_eq!((de.signed_by.as_str(), de.reason.as_str()), ("Digital signiert von", "Grund: "));
-        for code in ["zh-hans", "zh-hant", "ja", "ru", "uk", "bg", "kk", "el", "te", "cs", "lt", "ar"] {
-            assert_eq!(appearance_labels(Lang::from_code(code).unwrap()), (english.clone(), true), "{code}");
-        }
+        let (fr, _) = appearance_labels(Lang::from_code("fr").unwrap());
+        assert_eq!((fr.signed_by.as_str(), fr.reason.as_str()), ("Signé numériquement par", "Motif : "));
         for lang in Lang::all() {
             let (labels, in_english) = appearance_labels(lang);
             assert_eq!(labels.first_undrawable(), None, "{}: signing would refuse {labels:?}", lang.code());
@@ -1647,13 +1644,13 @@ mod tests {
     /// its label, in the words given, and only the values when the labels are off.
     #[test]
     fn preview_lines_use_the_labels_signing_stamps() {
-        let (de, _) = appearance_labels(crate::i18n::Lang::from_code("de").unwrap());
+        let (fr, _) = appearance_labels(crate::i18n::Lang::from_code("fr").unwrap());
         let all = Appearance { reason: true, location: true, ..Appearance::default() };
-        let lines = detail_lines(&all, &de, "Ada", " Genehmigt ", "Berlin", "2026.10.14 09:30:00 Z");
-        assert_eq!(lines, ["Digital signiert von", "Ada", "Grund: Genehmigt", "Ort: Berlin", "Datum: 2026.10.14 09:30:00 Z"]);
+        let lines = detail_lines(&all, &fr, "Ada", " Approuvé ", "Paris", "2026.10.14 09:30:00 Z");
+        assert_eq!(lines, ["Signé numériquement par", "Ada", "Motif : Approuvé", "Lieu : Paris", "Date : 2026.10.14 09:30:00 Z"]);
         let bare = Appearance { labels: false, ..all.clone() };
-        assert_eq!(detail_lines(&bare, &de, "Ada", "Genehmigt", "", "D"), ["Ada", "Genehmigt", "D"]);
+        assert_eq!(detail_lines(&bare, &fr, "Ada", "Approuvé", "", "D"), ["Ada", "Approuvé", "D"]);
         let nothing = Appearance { name: false, date: false, ..all };
-        assert!(detail_lines(&nothing, &de, "Ada", "  ", "", "D").is_empty());
+        assert!(detail_lines(&nothing, &fr, "Ada", "  ", "", "D").is_empty());
     }
 }

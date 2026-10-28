@@ -451,16 +451,16 @@ fn stamped(path: &std::path::Path) -> String {
     text
 }
 
-/// A signature signed in German is stamped with German labels. In Simplified Chinese, whose
-/// labels the signature's font can't draw, it is stamped with English ones and the dialog says
-/// so under the preview: signing neither fails nor writes `?` for them.
+/// A signature signed in French is stamped with French labels (a language whose labels the
+/// signature's font can't draw gets English ones, and the dialog says so under the preview):
+/// signing neither fails nor writes `?` for them.
 #[test]
 fn the_signature_labels_follow_the_interface_language() {
     use pdfcraft_ui_egui::i18n::{Lang, tr};
     let p12 = concat!(env!("CARGO_MANIFEST_DIR"), "/../sign/tests/data/ec-p256.p12");
     let cert = pdfcraft_engine::sign::pkcs12::open(&std::fs::read(p12).unwrap(), "test").unwrap().certificate;
     let note = "The labels are in English: the signature's font can't draw them in this language.";
-    for (code, labels, in_english) in [("de", ["(Digital", "(Grund:", "(Datum:"], false), ("zh-hans", ["(Digitally", "(Reason:", "(Date:"], true)] {
+    for (code, labels, in_english) in [("fr", ["(Sign", "(Motif", "(Date"], false)] {
         let dir = dir().join(code);
         std::fs::create_dir_all(&dir).unwrap();
         let mut h = harness(dir.clone());

@@ -105,15 +105,15 @@ fn month_names_follow_the_date_language_or_else_the_interface_language() {
         let mut app = PdfCraftApp::new();
         app.set_option("language", "en").unwrap();
         app.set_option("date-format", "d mmmm yyyy").unwrap();
-        app.set_option("language", "cs").unwrap();
+        app.set_option("language", "fr").unwrap();
         app.set_option("dialog", "preferences").unwrap();
         app
     });
     h.run_steps(3);
     let text = |h: &Harness<'static, PdfCraftApp>| h.state().date_text(None).unwrap();
-    assert_eq!(text(&h), h.state().session.today_text(None, Some("cs")).unwrap(), "follows the interface (Czech)");
+    assert_eq!(text(&h), h.state().session.today_text(None, Some("fr")).unwrap(), "follows the interface (French)");
     // The picker offers following the interface first, then the interface languages.
-    assert!(shows(&h, "Stejný jako rozhraní (Čeština)"));
+    assert!(shows(&h, "Comme l'interface (Français)"));
     h.state_mut().set_option("date-language", "es").unwrap();
     h.run_steps(2);
     assert_eq!(text(&h), h.state().session.today_text(None, Some("es")).unwrap());
@@ -138,9 +138,9 @@ fn a_date_the_pdf_cannot_hold_is_refused_with_a_warning_first() {
         app.set_option("language", "en").unwrap();
         app.open_bytes("form.pdf", None, PDF.to_vec()).expect("opens");
         app.set_option("left", "closed").unwrap();
-        // Japanese weekday names: Fill & Sign text can't hold them yet.
-        app.set_option("date-format", "dddd").unwrap();
-        app.set_option("date-language", "ja").unwrap();
+        // Letters the PDF's text can't hold yet (here CJK ones in the pattern).
+        app.set_option("date-format", "yyyy\\年mm\\月").unwrap();
+        app.set_option("date-language", "fr").unwrap();
         app.set_option("dialog", "preferences").unwrap();
         app
     });

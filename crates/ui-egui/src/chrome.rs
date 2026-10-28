@@ -826,7 +826,7 @@ fn right_bar(app: &mut PdfCraftApp, column: Rect, ctx: &egui::Context) {
         .constrain(false)
         .show(ctx, |ui| {
             ui.multiply_opacity(opacity);
-            widgets::floating_frame(&t).show(ui, |ui| {
+            widgets::floating_card(ui, &t, |ui| {
                 // The side panels come last: when the window is short, they are what scrolls. An area
                 // lays its content out in last frame's size, so the scroll area asks for its height
                 // outright; otherwise a bar sized in a small window would stay that small.
@@ -991,7 +991,7 @@ fn nav_bar(app: &mut PdfCraftApp, column: Rect, ctx: &egui::Context) -> Option<f
         .constrain(false)
         .show(ctx, |ui| {
             ui.multiply_opacity(opacity);
-            widgets::floating_frame(&t).show(ui, |ui| {
+            widgets::floating_card(ui, &t, |ui| {
                 ui.vertical_centered(|ui| {
                     ui.spacing_mut().item_spacing.y = 2.0;
                     // History is distinct from stepping to the adjacent page, and belongs to this tab.

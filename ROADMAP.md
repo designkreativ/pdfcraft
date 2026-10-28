@@ -151,7 +151,7 @@ union). Detail and script notes: [localization-parity.md](docs/localization-pari
 
 Also shipped: Traditional Chinese, Russian, Bulgarian, Telugu, Hungarian, Ukrainian, Italian,
 Kazakh, Polish, Slovenian, Greek, Turkish, Lithuanian and Czech (menus only): **14 more catalogs**
-(23 interface languages including English).
+(23 interface languages including English). **Since 2026-10-22 only English, French, Spanish and Turkish ship**; the 19 other catalogs were removed.
 
 ## Upcoming
 
@@ -170,6 +170,8 @@ Ranked; detail and the full milestone table in [docs/roadmap.md](docs/roadmap.md
 | 8 | 1.0 polish: performance, right-to-left, missing languages, keyboard-only (M14) | 55–95 |
 
 ## Progress log
+
+- **2026-10-22 (M14, localization):** The interface ships in English, French, Spanish and Turkish only. The 19 other catalogs, their tests and the engine's date languages for them are gone; language detection no longer maps Chinese or Portuguese tags. CJK, Arabic, Telugu and Thai fonts and right-to-left text stay for document content. `misc.localization` stays partial. Estimates unchanged.
 
 - **2026-10-21 (M14, view.multiple-windows):** A tab dragged well off the strip tears off into a window of its own under the pointer, or moves into the window it is dropped on; a preview names it while it is dragged. The last session reopens the windows with their tabs, active tabs and places. `view.multiple-windows` moves from planned to partial. Regressions seen to fail without the change. Estimates unchanged.
 

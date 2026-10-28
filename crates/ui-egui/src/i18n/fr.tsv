@@ -1,4 +1,4 @@
-# French (fr) catalog. Format: see the header of ja.tsv
+# French (fr) catalog. Format: see docs/localization.md
 # (context <TAB> source <TAB> translation; @id, @plural and other contexts; escapes \n \t \\).
 # Plural forms (see `plural_fr` in i18n/mod.rs): one (0 and 1) | other.
 #
@@ -2369,6 +2369,8 @@ animation effects	Off	Désactivés
 	Maximize	Agrandir
 	Restore	Restaurer
 	Use system title bar	Utiliser la barre de titre du système
+	Liquid Glass	Liquid Glass
+	Translucent floating bars with a glass-like sheen and rim.	Barres flottantes translucides, avec un reflet et un liseré de verre.
 	Show a basic title bar for the window buttons instead of the tab strip. GNOME doesn't draw title bars for apps, so this one doesn't follow its theme.	Afficher une barre de titre simple pour les boutons de la fenêtre au lieu de la barre d’onglets. GNOME ne dessine pas de barre de titre pour les applications : celle-ci ne suit donc pas son thème.
 
 # Absolute local GoToR confirmation (#1364).

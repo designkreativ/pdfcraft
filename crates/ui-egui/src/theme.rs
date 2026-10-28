@@ -68,6 +68,8 @@ pub struct Tokens {
     pub success_soft: Color32,
     pub page_shadow: Color32,
     pub radius: u8,
+    /// Liquid Glass: floating bars, menus and dialogs are translucent, with a sheen and a rim.
+    pub glass: bool,
 }
 
 impl Tokens {
@@ -98,6 +100,7 @@ impl Tokens {
                 success_soft: Color32::from_rgb(0xDD, 0xF3, 0xE4),
                 page_shadow: Color32::from_black_alpha(34),
                 radius: 6,
+                glass: false,
             },
             ThemeKind::Dark => Self {
                 kind,
@@ -124,6 +127,7 @@ impl Tokens {
                 success_soft: Color32::from_rgb(0x1A, 0x36, 0x27),
                 page_shadow: Color32::from_black_alpha(120),
                 radius: 6,
+                glass: false,
             },
         }
     }
@@ -373,6 +377,14 @@ fn font_definitions_for_platform(prefer_hans: bool, platform: FontPolicyPlatform
     add(&mut fonts, "Inter-SemiBold", include_bytes!("../../../assets/fonts/Inter-SemiBold.ttf"));
     add(&mut fonts, "JetBrainsMono", include_bytes!("../../../assets/fonts/JetBrainsMono-Regular.ttf"));
     fonts.families.entry(FontFamily::Proportional).or_default().insert(0, "Inter".to_owned());
+    // With the optional Apple build input, SF Pro Text leads the interface and Inter backs it up.
+    let sf = sf_pro_text();
+    if let Some((regular, _)) = sf {
+        for (name, bytes) in crate::apple_symbols::SF_PRO_TEXT {
+            fonts.font_data.insert((*name).to_owned(), Arc::new(FontData::from_static(bytes)));
+        }
+        fonts.families.entry(FontFamily::Proportional).or_default().insert(0, regular.to_owned());
+    }
     fonts.families.entry(FontFamily::Monospace).or_default().insert(0, "JetBrainsMono".to_owned());
     // Keep missing Latin/Cyrillic letters in the app's own faces (for example Bulgarian ѝ,
     // absent from JetBrains Mono), before egui's defaults or optional system/CJK fallbacks.
@@ -409,12 +421,21 @@ fn font_definitions_for_platform(prefer_hans: bool, platform: FontPolicyPlatform
         }
     }
     let fallback: Vec<String> = fonts.families[&FontFamily::Proportional].clone();
-    for (fam, primary) in [("medium", "Inter-Medium"), ("semibold", "Inter-SemiBold")] {
+    let (medium, semibold) = sf.map_or(("Inter-Medium", "Inter-SemiBold"), |(_, weights)| weights);
+    for (fam, primary) in [("medium", medium), ("semibold", semibold)] {
         let mut stack = vec![primary.to_owned()];
         stack.extend(fallback.iter().cloned());
         fonts.families.insert(FontFamily::Name(fam.into()), stack);
     }
     fonts
+}
+
+/// The names of SF Pro Text's Regular face, and its Medium and Semibold, when the build had it.
+fn sf_pro_text() -> Option<(&'static str, (&'static str, &'static str))> {
+    match crate::apple_symbols::SF_PRO_TEXT {
+        [(regular, _), (medium, _), (semibold, _)] => Some((regular, (medium, semibold))),
+        _ => None,
+    }
 }
 
 pub fn regular(size: f32) -> FontId {
@@ -425,6 +446,16 @@ pub fn medium(size: f32) -> FontId {
 }
 pub fn semibold(size: f32) -> FontId {
     FontId::new(size, FontFamily::Name("semibold".into()))
+}
+
+/// Turn Liquid Glass on or off for what is drawn from now on. [`apply`] resets it, so call this
+/// after it each frame.
+pub fn set_glass(ctx: &egui::Context, on: bool) {
+    let mut t = Tokens::get(ctx);
+    if t.glass != on {
+        t.glass = on;
+        ctx.data_mut(|d| d.insert_temp(egui::Id::new("pdfcraft-theme"), t));
+    }
 }
 
 pub fn apply(ctx: &egui::Context, kind: ThemeKind) {
